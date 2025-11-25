@@ -1,11 +1,10 @@
 node_modules
 .git
 .env
-dist
 test
 coverage
 *.log
 .prettierrc
 .eslintrc.js
 README.md
-scripts
+scripts/*.ts
