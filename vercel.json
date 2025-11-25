@@ -1,18 +1,17 @@
 {
   "version": 2,
+  "buildCommand": "npm install && npm run build",
+  "installCommand": "npm install",
   "builds": [
     {
-      "src": "dist/src/main.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/src/main.js"
+      "dest": "api/index.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
