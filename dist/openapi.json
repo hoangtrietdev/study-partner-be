@@ -1,0 +1,840 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/google": {
+      "post": {
+        "operationId": "AuthController_googleAuth",
+        "summary": "Authenticate with Google OAuth token",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "summary": "Logout user and revoke tokens",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "summary": "Refresh access token using refresh token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "summary": "Get list of users with filters and pagination",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "schoolName",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "major",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "faculty",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "summary": "Get user public profile by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "summary": "Update own user profile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Cannot update other users"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/matches/{targetId}": {
+      "post": {
+        "operationId": "MatchesController_createMatch",
+        "summary": "Create match request (swipe right)",
+        "parameters": [
+          {
+            "name": "targetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        },
+        "tags": [
+          "matches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/matches/{id}": {
+      "delete": {
+        "operationId": "MatchesController_unmatch",
+        "summary": "Unmatch with user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "Match not found"
+          }
+        },
+        "tags": [
+          "matches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/matches": {
+      "get": {
+        "operationId": "MatchesController_getUserMatches",
+        "summary": "Get all matches for current user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "matches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/matches/suggestions": {
+      "get": {
+        "operationId": "MatchesController_getSuggestions",
+        "summary": "Get AI-powered match suggestions",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "useAI",
+            "required": false,
+            "in": "query",
+            "description": "Use AI-powered suggestions",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "matchMode",
+            "required": false,
+            "in": "query",
+            "description": "strict (same school only) or random (all schools)",
+            "schema": {
+              "default": "random",
+              "enum": [
+                "strict",
+                "random"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchSuggestionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "matches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/messages/{matchId}": {
+      "get": {
+        "operationId": "MessagesController_getMessages",
+        "summary": "Get all messages for a match",
+        "parameters": [
+          {
+            "name": "matchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "tags": [
+          "messages"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "MessagesController_sendMessage",
+        "summary": "Send a message in a match",
+        "parameters": [
+          {
+            "name": "matchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found"
+          }
+        },
+        "tags": [
+          "messages"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/messages/{id}": {
+      "delete": {
+        "operationId": "MessagesController_deleteMessage",
+        "summary": "Delete a message (soft delete)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Can only delete own messages"
+          },
+          "404": {
+            "description": "Message not found"
+          }
+        },
+        "tags": [
+          "messages"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Groq Study Partner API",
+    "description": "Tinder-style study partner discovery app API",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Authentication endpoints"
+    },
+    {
+      "name": "users",
+      "description": "User management endpoints"
+    },
+    {
+      "name": "matches",
+      "description": "Match management endpoints"
+    },
+    {
+      "name": "messages",
+      "description": "Message management endpoints"
+    }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "GoogleAuthDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Google OAuth token"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token"
+          },
+          "user": {
+            "type": "object",
+            "description": "User object"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "user"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User ID (UUID v4)"
+          },
+          "googleId": {
+            "type": "string",
+            "description": "Google OAuth ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Profile image URL"
+          },
+          "schoolName": {
+            "type": "string",
+            "description": "School/University name"
+          },
+          "age": {
+            "type": "number",
+            "description": "Age"
+          },
+          "major": {
+            "type": "string",
+            "description": "Major/Field of study"
+          },
+          "faculty": {
+            "type": "string",
+            "description": "Faculty/Department"
+          },
+          "interests": {
+            "description": "Interests and skills",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bio": {
+            "type": "string",
+            "description": "Bio/About me"
+          },
+          "settings": {
+            "type": "object",
+            "description": "User settings"
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last seen timestamp"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token for auth"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at timestamp"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated at timestamp"
+          }
+        },
+        "required": [
+          "_id",
+          "googleId",
+          "name",
+          "email",
+          "imageUrl",
+          "schoolName",
+          "age",
+          "major",
+          "faculty",
+          "interests",
+          "bio",
+          "settings",
+          "lastSeenAt",
+          "refreshToken",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "schoolName": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          },
+          "major": {
+            "type": "string"
+          },
+          "faculty": {
+            "type": "string"
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bio": {
+            "type": "string"
+          },
+          "settings": {
+            "type": "object"
+          }
+        }
+      },
+      "MatchResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userAId": {
+            "type": "string"
+          },
+          "userBId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "matched",
+              "unmatched"
+            ]
+          },
+          "score": {
+            "type": "number"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userAId",
+          "userBId",
+          "status",
+          "score",
+          "explanation",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MatchSuggestionDto": {
+        "type": "object",
+        "properties": {
+          "candidateId": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "candidate": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "candidateId",
+          "score",
+          "explanation",
+          "candidate"
+        ]
+      },
+      "MessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "matchId": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "recipientId": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "matchId",
+          "senderId",
+          "recipientId",
+          "content",
+          "deleted",
+          "createdAt"
+        ]
+      },
+      "CreateMessageDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Message content"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      }
+    }
+  }
+}

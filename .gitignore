@@ -1,5 +1,5 @@
 # compiled output
-/dist
+# /dist - Commented out: Vercel needs dist/ folder
 /node_modules
 
 # Logs

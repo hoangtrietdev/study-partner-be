@@ -7,4 +7,3 @@ coverage
 .prettierrc
 .eslintrc.js
 README.md
-scripts/*.ts
